@@ -2,12 +2,27 @@
 
 GRPC service written in Golang which converts crypto amount to fiat(currency) value
 
+## Getting started
+
+1. Generate proto files:
+```
+make proto-gen
+```
+2. Fetch dependencies:
+```
+go mod tidy
+```
+3. Run service(you should have go installed):
+```
+go run ./cmd/main.go
+```
+
 ## Features
 
 - Config, logger and Dependency injection
 - GRPC as transport layer
-- In-memory store with invalidation, check out Cache section for details
-- Clean architecture(I haven't implement dedicated structs for each layer, but the most interchangeable layers has it's own structures)
+- In-memory store with partial invalidation, check out Cache section for details
+- Clean architecture(I haven't implement dedicated structs for each layer, but the most interchangeable layers has its own structures)
 - Unit test example(`intenral/service/cache/memory/memory_test.go`)
 - Linter
 
@@ -58,9 +73,10 @@ but we can also collect requests metrics and cache actual most frequent tokens a
 
 Pagination is implemented only for `GetTokenList`.
 
-# TODO
-1. Retry-Backoff logic with providers
+## TODO
+1. Retry-Backoff logic for Price Provider
 2. Metrics collection for convert requests and composing most frequent tokens and currencies based on actual data
 3. Cache invalidation for not predefined tokens and currencies
+4. Docker
 5. Integration tests
-7. Github actions pipeline
+6. Github actions pipeline
