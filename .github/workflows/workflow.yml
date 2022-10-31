@@ -1,0 +1,30 @@
+name: Linter and tests
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  linter:
+    name: Linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+      - name: Get golangci-lint
+        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.42.1
+      - name: Run golangci-lint
+        run: make lint
+  unit-test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+      - name: Run Unit Tests
+        run: make test-unit
