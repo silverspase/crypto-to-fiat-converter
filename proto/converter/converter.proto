@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option go_package = "silverspase/crypto-to-fiat-converter/grpc/converter";
+
+service Converter {
+  // Converts from crypto to fiat currency
+  rpc Convert (ConvertRequest) returns (ConvertResponse);
+  rpc GetTokenList(GetTokenListRequest) returns (GetTokenListResponse);
+}
+
+
+message ConvertRequest {
+  repeated SingleConvertRequest request = 1;
+}
+
+message SingleConvertRequest {
+  string fromToken = 1;
+  string toCurrency = 2;
+  float amount = 3;
+}
+
+message ConvertResponse {
+  repeated PriceByCurrency prices = 1;
+}
+
+message PriceByCurrency {
+  string fromToken = 1;
+  string toCurrency = 2;
+  float tokensAmount = 3;
+  float totalPrice = 4;
+}
+
+message GetTokenListRequest {
+  int32 pageToken = 1; // page token starts from 0
+  int32 pageSize = 2;
+}
+
+message GetTokenListResponse {
+  repeated Token tokens = 1;
+  int32 nextPageToken = 2;
+}
+
+message Token {
+  string ID = 1;
+  string Name = 2;
+  string Symbol = 3;
+}
