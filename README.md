@@ -25,6 +25,7 @@ go run ./cmd/main.go
 - Clean architecture(I haven't implement dedicated structs for each layer, but the most interchangeable layers has its own structures)
 - Unit test example(`intenral/service/cache/memory/memory_test.go`)
 - Linter
+- Github actions pipeline
 
 ## Cache
 
@@ -79,4 +80,3 @@ Pagination is implemented only for `GetTokenList`.
 3. Cache invalidation for not predefined tokens and currencies
 4. Docker
 5. Integration tests
-6. Github actions pipeline
