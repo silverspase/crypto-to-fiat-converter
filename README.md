@@ -9,8 +9,9 @@ GRPC service written in Golang which converts crypto amount to fiat(currency) va
 - Clean architecture(I haven't implement dedicated structs for each layer, but the most interchangeable layers has its own structures)
 - Unit test example(`intenral/service/cache/memory/memory_test.go`)
 - Linter
-- Github actions pipeline
 - Docker setup
+- Integration test example for `Convert` RPC 
+- Github actions pipeline
 
 
 ## Getting started
@@ -117,4 +118,3 @@ Pagination is implemented only for `GetTokenList`.
 1. Retry-Backoff logic for Price Provider
 2. Metrics collection for convert requests and composing most frequent tokens and currencies based on actual data
 3. Cache invalidation for not predefined tokens and currencies
-5. Integration tests
