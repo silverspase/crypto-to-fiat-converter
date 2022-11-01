@@ -118,3 +118,4 @@ Pagination is implemented only for `GetTokenList`.
 1. Retry-Backoff logic for Price Provider
 2. Metrics collection for convert requests and composing most frequent tokens and currencies based on actual data
 3. Cache invalidation for not predefined tokens and currencies
+
