@@ -28,20 +28,20 @@ go run ./cmd/main.go
 
 ## Cache
 
-### Straight forward solution
+### Solution 1
 
-We can store everything, and we don't need to handle expiration, we just update all data periodically.
+We can store everything, and we don't need to handle expiration, we just update all data periodically. 
+And implementation is relatively simple - in case of given task we can collect all data, and replace it at once with old one.
 But this solution has two constrains:
-- Storage size - lets assume we are unable to store everything in cache
-- Cache update - when we have a large amount of data in cache, we need to figure out the update mechanism, 
-- because we cannot lock everything during update
+- Storage size can be limited.
+- Cache update for large amount of data can be an issue, we need to figure out the update mechanism, because we cannot lock everything during update
 
-### Predefined cache plus single requests solution
+### Solution 2
 
-We load predefined tokens and currencies in memory on app start and keep updating it periodically.
-And each user request we also store in cache.
+We can define most frequently used token list and currencies and load them in memory on app start and keep updating it periodically.
+Additionally, we can store data that is absent in cache on user request. 
 
-During user request, there is no need to wait for Upsert(Insert/Update) completion, we can send the result to user immediately and finish the Upsert in gorutine
+During the request, there is no need to wait for Upsert(Insert/Update) completion, we can send the result to user immediately and finish the Upsert in gorutine
 
 #### Cache invalidation
 
