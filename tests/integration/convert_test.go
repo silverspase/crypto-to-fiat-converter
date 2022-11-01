@@ -25,7 +25,7 @@ func TestAddLotToUserFavoritesTestSuite(t *testing.T) {
 	suite.Run(t, new(ConvertTestSuite))
 }
 
-func (s *ConvertTestSuite) TestGetFlightPath_ok() {
+func (s *ConvertTestSuite) TestConvert_OK() {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(host, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
