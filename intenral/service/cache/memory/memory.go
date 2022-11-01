@@ -3,12 +3,11 @@ package memory
 import (
 	"time"
 
-	"crypto-to-fiat-converter/intenral/config"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"crypto-to-fiat-converter/intenral/service/cache"
+	"crypto-to-fiat-converter/intenral/config"
 	memoryMap "crypto-to-fiat-converter/intenral/service/cache/memory/map"
 	price "crypto-to-fiat-converter/intenral/service/price_provider"
 )
@@ -24,23 +23,16 @@ type service struct {
 	tokenList           []price.TokenListItem
 	currencyList        []string
 	syncPriceErrorCount int
-	metrics             metrics // nolint: unused
 }
 
-type metrics struct { // nolint: unused
-	tokens     map[string]int
-	currencies map[string]int
-}
-
-func New(cfg *config.Config, priceProvider price.Provider) (cache.Provider, error) {
+func New(cfg *config.Config, priceProvider price.Provider) (*service, error) {
 	s := &service{
 		cfg:           cfg,
 		priceProvider: priceProvider,
 		priceMap:      memoryMap.New(cfg),
 	}
 
-	err := s.initTokenList()
-	if err != nil {
+	if err := s.initTokenList(); err != nil {
 		return nil, err
 	}
 
@@ -75,7 +67,6 @@ func (s *service) syncPrices() {
 
 		time.Sleep(s.cfg.SyncFrequencyForPopularTokens * time.Second)
 	}
-
 }
 
 func (s *service) getMostFrequentTokensAndCurrencies() (tokens, currencies []string) {
@@ -89,6 +80,7 @@ func (s *service) GetFiatValue(tokenID, vsCurrency string) (tokenPrice float32, 
 	tokenPrice, ok := s.priceMap.Get(tokenID, vsCurrency)
 	if !ok {
 		zap.L().Info("no cache record, fetching data from price provider")
+
 		return s.fetchTokenPriceAndUpdateStore(tokenID, vsCurrency)
 	}
 
@@ -128,5 +120,6 @@ func (s *service) fetchTokenPriceAndUpdateStore(tokenID, vsCurrency string) (tok
 
 func (s *service) initTokenList() (err error) {
 	s.tokenList, s.currencyList, err = s.priceProvider.GetTokenAndCurrencyLists()
+
 	return err
 }

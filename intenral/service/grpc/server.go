@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"crypto-to-fiat-converter/intenral/config"
 	"crypto-to-fiat-converter/intenral/service/currency_converter"
 	"crypto-to-fiat-converter/intenral/service/currency_converter/types"
 	"crypto-to-fiat-converter/proto/converter"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type service struct {
@@ -18,25 +19,25 @@ type service struct {
 	converter currency_converter.Provider
 }
 
-func New(cfg *config.Config, converter currency_converter.Provider) converter.ConverterServer {
+func New(cfg *config.Config, converter currency_converter.Provider) *service {
 	return &service{
 		cfg:       cfg,
 		converter: converter,
 	}
 }
 
-func (s *service) Convert(ctx context.Context, in *converter.ConvertRequest) (*converter.ConvertResponse, error) {
-	if in == nil {
+func (s *service) Convert(ctx context.Context, req *converter.ConvertRequest) (*converter.ConvertResponse, error) {
+	if req == nil {
 		return nil, status.Errorf(codes.InvalidArgument, "request is empty")
 	}
 
-	var convertRequest []types.ConvertRequest
-	for _, val := range in.Request {
-		convertRequest = append(convertRequest, types.ConvertRequest{
+	var convertRequest = make([]types.ConvertRequest, len(req.Request))
+	for i, val := range req.Request {
+		convertRequest[i] = types.ConvertRequest{
 			FromToken:  val.FromToken,
 			ToCurrency: val.ToCurrency,
 			Amount:     val.Amount,
-		})
+		}
 	}
 
 	responseRaw, err := s.converter.Convert(convertRequest)
@@ -44,14 +45,14 @@ func (s *service) Convert(ctx context.Context, in *converter.ConvertRequest) (*c
 		return nil, err
 	}
 
-	var response []*converter.PriceByCurrency
-	for _, val := range responseRaw {
-		response = append(response, &converter.PriceByCurrency{
+	var response = make([]*converter.PriceByCurrency, len(responseRaw))
+	for i, val := range responseRaw {
+		response[i] = &converter.PriceByCurrency{
 			FromToken:    val.FromToken,
 			ToCurrency:   val.ToCurrency,
 			TokensAmount: val.TokenAmount,
 			TotalPrice:   val.TotalPrice,
-		})
+		}
 	}
 
 	return &converter.ConvertResponse{
@@ -73,13 +74,13 @@ func (s *service) GetTokenList(ctx context.Context, req *converter.GetTokenListR
 		return nil, err
 	}
 
-	var response []*converter.Token
-	for _, val := range tokens {
-		response = append(response, &converter.Token{
+	var response = make([]*converter.Token, len(tokens))
+	for i, val := range tokens {
+		response[i] = &converter.Token{
 			ID:     val.ID,
 			Name:   val.Name,
 			Symbol: val.Symbol,
-		})
+		}
 	}
 
 	return &converter.GetTokenListResponse{

@@ -15,4 +15,4 @@ test-unit: ## Unit testing
 # linter section
 .PHONY: lint
 lint:
-	golangci-lint run -v
+	golangci-lint --config=./golangci.yml run -v
