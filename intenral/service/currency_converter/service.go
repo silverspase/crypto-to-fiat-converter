@@ -1,18 +1,19 @@
 package currency_converter
 
 import (
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"crypto-to-fiat-converter/intenral/service/cache"
 	"crypto-to-fiat-converter/intenral/service/currency_converter/types"
 	price "crypto-to-fiat-converter/intenral/service/price_provider"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type service struct {
 	cacheProvider cache.Provider
 }
 
-func New(cacheProvider cache.Provider) Provider {
+func New(cacheProvider cache.Provider) *service {
 	return &service{
 		cacheProvider: cacheProvider,
 	}

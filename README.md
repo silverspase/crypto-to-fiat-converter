@@ -25,6 +25,7 @@ go run ./cmd/main.go
 - Clean architecture(I haven't implement dedicated structs for each layer, but the most interchangeable layers has its own structures)
 - Unit test example(`intenral/service/cache/memory/memory_test.go`)
 - Linter
+- Github actions pipeline
 
 ## Cache
 
@@ -42,6 +43,8 @@ We can define most frequently used token list and currencies and load them in me
 Additionally, we can store data that is absent in cache on user request. 
 
 During the request, there is no need to wait for Upsert(Insert/Update) completion, we can send the result to user immediately and finish the Upsert in gorutine
+
+I implemented this solution, check the details below
 
 #### Cache invalidation
 
@@ -68,6 +71,13 @@ Cleaner service will go over the queue as long as Expiration date is in the past
 We can start from predefined list of tokens and currencies, 
 but we can also collect requests metrics and cache actual most frequent tokens and currencies
 
+```
+type metrics struct { // nolint: unused
+	tokens     map[string]int
+	currencies map[string]int
+}
+```
+
 
 ## Pagination
 
@@ -79,4 +89,3 @@ Pagination is implemented only for `GetTokenList`.
 3. Cache invalidation for not predefined tokens and currencies
 4. Docker
 5. Integration tests
-6. Github actions pipeline

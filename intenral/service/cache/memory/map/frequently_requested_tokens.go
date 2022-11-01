@@ -4,8 +4,9 @@ import (
 	"sync"
 	"time"
 
-	"crypto-to-fiat-converter/intenral/config"
 	"go.uber.org/zap"
+
+	"crypto-to-fiat-converter/intenral/config"
 )
 
 type pricesByTokenAndCurrency struct {
@@ -19,7 +20,7 @@ type tokenPrice struct {
 	updatedAt time.Time
 }
 
-func New(cfg *config.Config) Provider {
+func New(cfg *config.Config) *pricesByTokenAndCurrency {
 	return &pricesByTokenAndCurrency{
 		cfg: cfg,
 		m:   make(map[string]map[string]tokenPrice),
@@ -39,7 +40,6 @@ func (p *pricesByTokenAndCurrency) Upsert(token, currency string, price float32)
 		price:     price,
 		updatedAt: time.Now(),
 	}
-
 }
 
 func (p *pricesByTokenAndCurrency) Get(token, currency string) (float32, bool) {
@@ -56,6 +56,7 @@ func (p *pricesByTokenAndCurrency) Get(token, currency string) (float32, bool) {
 	if ok && time.Now().After(expirationTime) {
 		zap.L().Info("price is too old, removing it")
 		delete(p.m[token], currency)
+
 		return 0, false
 	}
 

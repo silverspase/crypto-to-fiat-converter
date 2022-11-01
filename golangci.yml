@@ -147,6 +147,25 @@ linters:
     - interfacer # deprecated by owner, no alternative
     - golint # deprecated, replaced by revive
     - maligned # deprecated, replaced by fieldalignment
+    - ifshort # deprecated
+    - deadcode # deprecated, replaced by unused
+    - varcheck # deprecated, replaced by unused
+    - exhaustivestruct # deprecated, replaced by exhaustruct
+    - structcheck # is disabled because of generics
+    - wastedassign # is disabled because of generics
+    - rowserrcheck # is disabled because of generics
+    - sqlclosecheck # is disabled because of generics
+    - wrapcheck
+    - gofumpt
+    - wsl
+    - nosnakecase
+    - nonamedreturns
+    - gci
+    - godox
+    - varnamelen
+    - stylecheck
+    - durationcheck
+    - exhaustruct
 
   fast: false
 

@@ -4,17 +4,20 @@ import (
 	"net/http"
 	"time"
 
-	price "crypto-to-fiat-converter/intenral/service/price_provider"
 	coingecko "github.com/superoo7/go-gecko/v3"
+
+	price "crypto-to-fiat-converter/intenral/service/price_provider"
 )
+
+const httpClientTimeout = 10
 
 type service struct {
 	client *coingecko.Client
 }
 
-func New() (price.Provider, error) {
+func New() (*service, error) {
 	httpClient := &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Second * httpClientTimeout,
 	}
 	client := coingecko.NewClient(httpClient)
 	_, err := client.Ping()
@@ -66,5 +69,6 @@ func (s *service) GetTokenAndCurrencyLists() (tokenList []price.TokenListItem, c
 	for _, val := range *currencyListRaw {
 		currencyList = append(currencyList, val)
 	}
+
 	return tokenList, currencyList, nil
 }
